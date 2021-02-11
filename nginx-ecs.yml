@@ -1,8 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  CertificateArn:
-    Type: String
-    Description: ARN of an existing certificate which will be attached to the ALB created by the stack, to serve HTTPS traffic.
   NginxImage:
     Type: String
     Default: nginx:1.17.7
