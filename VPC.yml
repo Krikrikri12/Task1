@@ -59,7 +59,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.21.0/24\
+      CidrBlock: 10.0.21.0/24
       MapPublicIpOnLaunch: false
       AvailabilityZone: !Select [ 1, !GetAZs ]
       Tags:
