@@ -9,7 +9,7 @@ Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: s3://templateofvpc
+      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.txt
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
