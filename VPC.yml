@@ -6,7 +6,8 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: 10.0.0.0/16					
+      CidrBlock: 10.0.0.0/16	
+      EnableDnsHostnames: true
       Tags:
       - Key: Name
         Value: !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
@@ -26,6 +27,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.10.0/24
+      MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [ 0, !GetAZs ]
       Tags:
       - Key: Name
@@ -36,6 +38,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.11.0/24
+      MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [ 1, !GetAZs ]
       Tags:
       - Key: Name
@@ -46,6 +49,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.20.0/24
+      MapPublicIpOnLaunch: false
       AvailabilityZone: !Select [ 0, !GetAZs ]
       Tags:
       - Key: Name
@@ -55,7 +59,8 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.21.0/24
+      CidrBlock: 10.0.21.0/24\
+      MapPublicIpOnLaunch: false
       AvailabilityZone: !Select [ 1, !GetAZs ]
       Tags:
       - Key: Name
@@ -160,3 +165,16 @@ Resources:
     Properties:
       SubnetId: !Ref PrivateSubnet2
       RouteTableId: !Ref PrivateRouteTable2
+Outputs:
+  CIDRVPC:
+    Value: !GetAtt VPC.CidrBlock
+  PublicSubnet1:
+    Value: !Ref PublicSubnet1
+  PublicSubnet2:
+    Value: !Ref PublicSubnet2
+  PrivateSubnet1:
+    Value: !Ref PrivateSubnet1
+  PrivateSubnet2:
+    Value: !Ref PrivateSubnet2
+  VPC:
+    Value: !Ref VPC
