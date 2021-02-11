@@ -28,7 +28,7 @@ Resources:
   NginxExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: deployment-example-role
+      RoleName: deployment-example-role1
       Path: /
       AssumeRolePolicyDocument:
         Statement:
