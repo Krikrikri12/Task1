@@ -10,6 +10,7 @@ pipeline {
             sh "aws cloudformation create-stack --stack-name vpc2 --template-body file://nginx-ecs.yml --region 'us-east-1'"
          }
       }
+   }     
     post {
         always {
             deleteDir()
