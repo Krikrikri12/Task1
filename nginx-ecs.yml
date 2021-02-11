@@ -32,8 +32,7 @@ Resources:
       Path: /
       AssumeRolePolicyDocument:
         Statement:
-          - Action: sts:AssumeRole
-            Effect: Allow
+          - Effect: Allow
             Principal:
               Service: ecs-tasks.amazonaws.com
       ManagedPolicyArns:
