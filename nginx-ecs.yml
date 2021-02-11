@@ -58,7 +58,7 @@ Resources:
                 Action:
                   - elasticfilesystem:ClientMount
                   - elasticfilesystem:ClientWrite
-                Resource: !Sub arn:aws:elasticfilesystem:${AWS::Region}:${AWS::AccountId}:file-system/${FileSystemResource}
+                Resource: !Sub arn:aws:elasticfilesystem:${AWS::Region}:${AWS::AccountId}
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
