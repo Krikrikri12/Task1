@@ -123,4 +123,3 @@ Resources:
         - ContainerName: nginx
           ContainerPort: 80
           TargetGroupArn: !Ref DefaultTargetGroup
- 
