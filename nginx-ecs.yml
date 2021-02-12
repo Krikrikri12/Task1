@@ -15,8 +15,8 @@ Resources:
     Properties:
       Name: ecs-services
       Subnets:
-        - !ImportValue 'Subnet1'
-        - !ImportValue 'Subnet2'
+        - !GetAtt VPCStack.Outputs.PublicSubnet1
+        - !GetAtt VPCStack.Outputs.PublicSubnet2
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
 
