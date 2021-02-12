@@ -4,7 +4,7 @@ Parameters:
     Type: String
     Default: nginx:1.17.7
     Description: Docker image used in the ECS task definition. 
-Description: Deployunf Nginx to ECS
+Description: Deploying Nginx to ECS
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
@@ -48,7 +48,6 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckPath: /login
       Name: TargetGroup
       Port: 80
       Protocol: HTTP
@@ -121,7 +120,6 @@ Resources:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref TaskDefinition
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 300
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
