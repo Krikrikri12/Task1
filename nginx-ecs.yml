@@ -13,7 +13,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://github.com/Krikrikri12/Task1/blob/master/VPC.yml
-   LoadBalancer:
+  LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Subnets:
@@ -68,7 +68,7 @@ Resources:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
       VpcId: !GetAtt VPCStack.Outputs.VPC
-  JenkinsLoadBalancerSecurityGroupIngress:
+  LoadBalancerSecurityGroupIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       IpProtocol: tcp
