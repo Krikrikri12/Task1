@@ -10,6 +10,48 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: ecs-services
+      Subnets:
+        - !ImportValue 'Subnet1'
+        - !ImportValue 'Subnet2'
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Protocol: HTTP
+      Port: 80
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for loadbalancer to services on ECS
+      VpcId: !GetAtt VPCStack.Outputs.VPC
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: -1
+
+  DefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: default
+      VpcId: !GetAtt VPCStack.Outputs.VPC
+      Protocol: 'HTTP'
+      Port: '80'  
+
+  CloudWatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: 'apis'
+      RetentionInDays: 1
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -17,11 +59,15 @@ Resources:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
       VpcId: !GetAtt VPCStack.Outputs.VPC
-
+      SecurityGroupIngress:
+       - SourceSecurityGroupId: !Ref 'LoadBalancerSecurityGroup'
+         IpProtocol: -1
+      
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: default-cluster
+      
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -54,16 +100,13 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !Ref CloudwatchLogsGroup
+              awslogs-group: !Ref CloudWatchLogsGroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: ecs
-  CloudwatchLogsGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
-      RetentionInDays: 14
+
   Service:
     Type: AWS::ECS::Service
+    DependsOn: LoadBalancerListener
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref TaskDefinition
@@ -73,7 +116,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !GetAtt VPCStack.Outputs.PrivateSubnet1
+            - !GetAtt VPCStack.Outputs.PublicSubnet1
+            - !GetAtt VPCStack.Outputs.PublicSubnet2
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
  
