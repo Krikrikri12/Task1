@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Template deploys VPS, with 2 public and 2 private subnets across 2 Availability Zones.
-   It deploys 2 NAT Gateway to provide egress for private subnets, each in each availability zone.
+Description: Template deploys VPC, with 1 public and 1 private subnets.
+   It deploys 1 NAT Gateway to provide egress for private subnet.
    
 Resources:
   VPC:
