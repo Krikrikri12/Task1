@@ -121,6 +121,6 @@ Resources:
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
             
-        - ContainerName: nginx
+          ContainerName: nginx
           ContainerPort: 80
           TargetGroupArn: !Ref DefaultTargetGroup
