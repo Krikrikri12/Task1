@@ -74,7 +74,6 @@ Resources:
           AssignPublicIp: ENABLED
           Subnets:
             - !GetAtt VPCStack.Outputs.PrivateSubnet1
-            - !GetAtt VPCStack.Outputs.PrivateSubnet2
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
  
