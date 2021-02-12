@@ -23,7 +23,7 @@ Resources:
     Properties:
       GroupName: LoadBalancerSecurityGroup
       GroupDescription: Security group for load balancer
-      VpcId: !GetAtt VPCStack.Outputs.VPCexe
+      VpcId: !GetAtt VPCStack.Outputs.VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 443
