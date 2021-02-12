@@ -1,34 +1,89 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
+  CertificateArn:
+    Type: String
+    Description: ARN of an existing certificate which will be attached to the ALB created by the stack, to serve HTTPS traffic.
   NginxImage:
     Type: String
     Default: nginx:1.17.7
     Description: Docker image used in the ECS task definition. 
-Description: Deployment of Nginx to ECS
+Description: Deployunf Nginx to ECS
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
+      TemplateURL: https://github.com/Krikrikri12/Task1/blob/master/VPC.yml
+   LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+        - !GetAtt VPCStack.Outputs.PublicSubnet1
+        - !GetAtt VPCStack.Outputs.PublicSubnet2
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: LoadBalancerSecurityGroup
+      GroupDescription: Security group for load balancer
+      VpcId: !GetAtt VPCStack.Outputs.VPCexe
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          DestinationSecurityGroupId: !Ref SecurityGroup
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+      DefaultActions:
+        - Type: forward
+          ForwardConfig:
+            TargetGroups:
+              - TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 443
+      Protocol: HTTPS
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckPath: /login
+      Name: TargetGroup
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !GetAtt VPCStack.Outputs.VPC
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 10
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
       VpcId: !GetAtt VPCStack.Outputs.VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
+  JenkinsLoadBalancerSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      FromPort: 80
+      ToPort: 80
+      GroupId: !Ref SecurityGroup
+      SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: default-cluster1
-  NginxExecutionRole:
+      ClusterName: default-cluster
+  ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: deployment-example-role1
+      RoleName: deployment-example-role
       Path: /
       AssumeRolePolicyDocument:
         Statement:
@@ -38,27 +93,6 @@ Resources:
               Service: ecs-tasks.amazonaws.com
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-  NginxRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: role
-      Path: /
-      AssumeRolePolicyDocument:
-        Statement:
-          - Action: sts:AssumeRole
-            Effect: Allow
-            Principal:
-              Service: ecs-tasks.amazonaws.com
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - elasticfilesystem:ClientMount
-                  - elasticfilesystem:ClientWrite
-                Resource: !Sub arn:aws:elasticfilesystem:${AWS::Region}:${AWS::AccountId}
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -66,7 +100,7 @@ Resources:
       Cpu: 256
       Memory: 512
       NetworkMode: awsvpc
-      ExecutionRoleArn: !Ref NginxRole
+      ExecutionRoleArn: !Ref ExecutionRole
       RequiresCompatibilities:
         - FARGATE
         - EC2
@@ -92,6 +126,7 @@ Resources:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref TaskDefinition
       DesiredCount: 1
+      HealthCheckGracePeriodSeconds: 300
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
@@ -101,3 +136,4 @@ Resources:
             - !GetAtt VPCStack.Outputs.PrivateSubnet2
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
+ 
