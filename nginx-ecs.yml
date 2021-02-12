@@ -10,63 +10,14 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Subnets:
-        - !GetAtt VPCStack.Outputs.PublicSubnet1
-        - !GetAtt VPCStack.Outputs.PublicSubnet2
-      SecurityGroups:
-        - !Ref LoadBalancerSecurityGroup
-  LoadBalancerSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: LoadBalancerSecurityGroup
-      GroupDescription: Security group for load balancer
-      VpcId: !GetAtt VPCStack.Outputs.VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          DestinationSecurityGroupId: !Ref SecurityGroup
-  LoadBalancerListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          ForwardConfig:
-            TargetGroups:
-              - TargetGroupArn: !Ref TargetGroup
-      LoadBalancerArn: !Ref LoadBalancer
-      Port: 443
-      Protocol: HTTPS
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      Name: TargetGroup
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-      VpcId: !GetAtt VPCStack.Outputs.VPC
+
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
       VpcId: !GetAtt VPCStack.Outputs.VPC
-  LoadBalancerSecurityGroupIngress:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      IpProtocol: tcp
-      FromPort: 80
-      ToPort: 80
-      GroupId: !Ref SecurityGroup
-      SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
@@ -113,7 +64,6 @@ Resources:
       RetentionInDays: 14
   Service:
     Type: AWS::ECS::Service
-    DependsOn: LoadBalancerListener
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref TaskDefinition
