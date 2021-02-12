@@ -120,4 +120,7 @@ Resources:
             - !GetAtt VPCStack.Outputs.PublicSubnet2
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
+        - ContainerName: nginx
+          ContainerPort: 80
+          TargetGroupArn: !Ref DefaultTargetGroup
  
