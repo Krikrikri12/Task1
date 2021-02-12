@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Submit Stack') {
             steps {
-            sh "aws cloudformation create-stack --stack-name vpc3 --template-body file://nginx-ecs.yml --region 'us-east-1' --capabilities CAPABILITY_NAMED_IAM"
+            sh "aws cloudformation create-stack --stack-name vpc4 --template-body file://nginx-ecs.yml --region 'us-east-1' --capabilities CAPABILITY_NAMED_IAM"
          }
       }
    }     
