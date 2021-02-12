@@ -9,7 +9,7 @@ Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://github.com/Krikrikri12/Task1/blob/master/VPC.yml
+      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
