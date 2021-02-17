@@ -65,8 +65,13 @@ Resources:
       GroupDescription: Security group for Nginx
       VpcId: !GetAtt VPCStack.Outputs.VPC
       SecurityGroupIngress:
-       - SourceSecurityGroupId: !Ref 'LoadBalancerSecurityGroup'
-         IpProtocol: -1
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
       
   ECSCluster:
     Type: AWS::ECS::Cluster
