@@ -35,7 +35,7 @@ Resources:
     Properties:
       GroupDescription: Security group for loadbalancer to services on ECS
       VpcId: !GetAtt VPCStack.Outputs.VPC
-     SecurityGroupIngress:
+      SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
@@ -43,7 +43,6 @@ Resources:
       SecurityGroupEgress:
         - IpProtocol: "-1"
           CidrIp: 0.0.0.0/0
-          DestinationSecurityGroupId: !Ref SecurityGroup
 
   DefaultTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -129,4 +128,3 @@ Resources:
             
           ContainerName: nginx
           ContainerPort: 80
-          TargetGroupArn: !Ref DefaultTargetGroup
