@@ -52,7 +52,16 @@ Resources:
     Properties:
       LogGroupName: 'apis'
       RetentionInDays: 1
-
+      
+  NginxLoadBalancerSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      FromPort: 80
+      ToPort: 80
+      GroupId: !Ref SecurityGroup
+      SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+      
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
