@@ -5,6 +5,7 @@ Parameters:
     Default: nginx:1.17.7
     Description: Docker image used in the ECS task definition. 
 Description: Deploying Nginx to ECS
+
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
@@ -96,6 +97,7 @@ Resources:
               Service: ecs-tasks.amazonaws.com
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+        
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
