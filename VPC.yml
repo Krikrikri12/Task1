@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Template deploys VPS, with deploys 2 public subnets across 2 Availability Zones.
+Description: CF Template for VPC with deploys 2 public subnets.
    
 Resources:
   VPC:
