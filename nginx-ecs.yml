@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
+Description: CF template for deploying a service on AWS Fargate in a public subnet with access through a load balancer.
 Parameters:
   NginxImage:
     Type: String
     Default: nginx:1.17.7
     Description: Docker image used in the ECS task definition. 
-Description: Deploying Nginx to ECS
 
 Resources:
   VPCStack:
