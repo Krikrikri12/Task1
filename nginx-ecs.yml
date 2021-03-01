@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: CF template for deploying a service on AWS Fargate in a public subnet with access through a load balancer.
+Description: CF template for deploying a service on AWS Fargate in a public subnet.
 Parameters:
   NginxImage:
     Type: String
@@ -11,52 +11,6 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Name: ecs-services
-      Subnets:
-        - !GetAtt VPCStack.Outputs.PublicSubnet1
-        - !GetAtt VPCStack.Outputs.PublicSubnet2
-      SecurityGroups:
-        - !Ref LoadBalancerSecurityGroup
-
-  LoadBalancerListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      LoadBalancerArn: !Ref LoadBalancer
-      Protocol: HTTP
-      Port: 80
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref DefaultTargetGroup
-
-  LoadBalancerSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security group for loadbalancer to services on ECS
-      VpcId: !GetAtt VPCStack.Outputs.VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: "-1"
-          CidrIp: 0.0.0.0/0
-
-  DefaultTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      HealthCheckPath: /login
-      Name: DefaultTargetGroup
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-      VpcId: !GetAtt VPCStack.Outputs.VPC
-      TargetGroupAttributes:
-        - Key: deregistration_delay.timeout_seconds
-          Value: 10
           
   CloudWatchLogsGroup:
     Type: AWS::Logs::LogGroup
@@ -123,7 +77,6 @@ Resources:
 
   Service:
     Type: AWS::ECS::Service
-    DependsOn: LoadBalancerListener
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref TaskDefinition
@@ -137,7 +90,3 @@ Resources:
             - !GetAtt VPCStack.Outputs.PublicSubnet2
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
-      LoadBalancers:
-        - ContainerName: nginx
-          ContainerPort: 80
-          TargetGroupArn: !Ref DefaultTargetGroup
