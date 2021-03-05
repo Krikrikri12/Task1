@@ -7,6 +7,11 @@ Parameters:
     Description: Docker image used in the ECS task definition. 
 
 Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
+      
     AutoScalingGroup:
       Type: AWS::AutoScaling::AutoScalingGroup
       Properties:
@@ -34,11 +39,7 @@ Resources:
           - !Ref SecurityGroup
         InstanceType: t2.micro
         LaunchConfigurationName: !Sub ${AWS::StackName}-LaunchConfig
-        
-  VPCStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
+
           
   CloudWatchLogsGroup:
     Type: AWS::Logs::LogGroup
