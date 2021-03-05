@@ -7,6 +7,34 @@ Parameters:
     Description: Docker image used in the ECS task definition. 
 
 Resources:
+    AutoScalingGroup:
+      Type: AWS::AutoScaling::AutoScalingGroup
+      Properties:
+        DesiredCapacity:
+          Ref: 2
+        LaunchConfigurationName: !Ref LaunchConfig
+        MaxSize:
+          Ref: 2
+        MinSize:
+          Ref: 1
+        Tags:
+          -
+            Key: Name
+            Value: !Sub ${AWS::StackName}-AutoScalingGroup
+            PropagateAtLaunch: 'true'
+        VPCZoneIdentifier:
+          - !GetAtt VPCStack.Outputs.PublicSubnet1
+    LaunchConfig: 
+      Type: AWS::AutoScaling::LaunchConfiguration
+      Properties: 
+        AssociatePublicIpAddress: true
+        KeyName: nginx-instance
+        ImageId: !FindInMap [ RegionMap, !Ref "AWS::Region", HVM64 ]
+        SecurityGroups: 
+          - !Ref SecurityGroup
+        InstanceType: t2.micro
+        LaunchConfigurationName: !Sub ${AWS::StackName}-LaunchConfig
+        
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
