@@ -20,13 +20,10 @@ Resources:
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      DesiredCapacity:
-        Ref: !Ref ClusterSize
+      DesiredCapacity: !Ref ClusterSize
       LaunchConfigurationName: !Ref LaunchConfig
-      MaxSize:
-        Ref: !Ref ClusterSize
-      MinSize:
-        Ref: !Ref ClusterSize
+      MaxSize: !Ref ClusterSize
+      MinSize: !Ref ClusterSize
       Tags:
         -
           Key: Name
