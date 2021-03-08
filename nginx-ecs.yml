@@ -5,6 +5,11 @@ Parameters:
     Type: String
     Default: nginx:1.17.7
     Description: Docker image used in the ECS task definition. 
+    
+  ClusterSize:
+        Description: The limit of Autoscaling cluster
+        Type: Number
+        Default: "1"
 
 Resources:
   VPCStack:
@@ -16,12 +21,12 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       DesiredCapacity:
-        Ref: 2
+        Ref: !Ref ClusterSize
       LaunchConfigurationName: !Ref LaunchConfig
       MaxSize:
-        Ref: 2
+        Ref: !Ref ClusterSize
       MinSize:
-        Ref: 1
+        Ref: !Ref ClusterSize
       Tags:
         -
           Key: Name
