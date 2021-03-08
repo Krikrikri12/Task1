@@ -36,7 +36,7 @@ Resources:
     Properties: 
       AssociatePublicIpAddress: true
       KeyName: nginx-instance
-      ImageId: !FindInMap [ RegionMap, !Ref "AWS::Region", HVM64 ]
+      ImageId: "ami-04a4fb062c609f55b"
       SecurityGroups: 
         - !Ref SecurityGroup
       InstanceType: t2.micro
