@@ -54,16 +54,16 @@ Resources:
       SubnetId: !Ref PublicSubnet1
       RouteTableId: !Ref PublicRouteTable
  
-Outputs:
+OutputsStack:
   CIDRVPC:
     Value: !GetAtt VPC.CidrBlock
     Export: 
       Name: CIDRVPC
-  PublicSubnet1:
+  PublicSubnet1Stack:
     Value: !Ref PublicSubnet1
     Export:
       Name: PublicSubnet1
-  VPC:
+  VPCStack:
     Value: !Ref VPC
     Export:
       Name: VPC
