@@ -36,7 +36,7 @@ Resources:
     Properties: 
       AssociatePublicIpAddress: true
       KeyName: nginx-instance
-      ImageId: "ami-04a4fb062c609f55b"
+      ImageId: "ami-4ae27e22"
       SecurityGroups: 
         - !Ref SecurityGroup
       InstanceType: t2.micro
