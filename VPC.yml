@@ -63,7 +63,7 @@ Outputs:
     Value: !Ref PublicSubnet1
     Export:
       Name: PublicSubnet1
-  VPCStack:
+  VPCId:
     Value: !Ref VPC
     Export:
       Name: VPC
