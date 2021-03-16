@@ -35,7 +35,7 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties: 
       AssociatePublicIpAddress: true
-      KeyName: nginx-instance
+      KeyName: forjenkins
       ImageId: "ami-4ae27e22"
       SecurityGroups: 
         - !Ref SecurityGroup
