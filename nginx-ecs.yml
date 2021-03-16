@@ -12,10 +12,6 @@ Parameters:
         Default: "1"
 
 Resources:
-  VPCStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
       
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -30,7 +26,7 @@ Resources:
           Value: !Sub ${AWS::StackName}-AutoScalingGroup
           PropagateAtLaunch: 'true'
       VPCZoneIdentifier:
-        - !GetAtt VPCStack.Outputs.PublicSubnet1
+        - Fn::ImportValue Outputs.PublicSubnet1
   LaunchConfig: 
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties: 
@@ -54,7 +50,7 @@ Resources:
     Properties:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
-      VpcId: !GetAtt VPCStack.Outputs.VPC
+      VpcId: - Fn::ImportValue Outputs.VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -127,6 +123,6 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !GetAtt VPCStack.Outputs.PublicSubnet1
+            - Fn::ImportValue Outputs.PublicSubnet1
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
