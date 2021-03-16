@@ -26,7 +26,7 @@ Resources:
           Value: !Sub ${AWS::StackName}-AutoScalingGroup
           PropagateAtLaunch: 'true'
       VPCZoneIdentifier:
-        - !GetAtt Outputs.PublicSubnet1
+        - !ImportValue PublicSubnet1
   LaunchConfig: 
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties: 
@@ -50,7 +50,7 @@ Resources:
     Properties:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
-      VpcId: !GetAtt Outputs.VPC
+      VpcId: !ImportValue VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -123,6 +123,6 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !GetAtt Outputs.PublicSubnet1
+            - !ImportValue PublicSubnet1
           SecurityGroups:
             - !GetAtt SecurityGroup.GroupId
