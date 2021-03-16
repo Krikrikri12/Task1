@@ -57,7 +57,13 @@ Resources:
 Outputs:
   CIDRVPC:
     Value: !GetAtt VPC.CidrBlock
+    Export: 
+      Name: CIDRVPC
   PublicSubnet1:
     Value: !Ref PublicSubnet1
+    Export:
+      Name: PublicSubnet1
   VPC:
     Value: !Ref VPC
+    Export:
+      Name: VPC
