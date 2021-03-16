@@ -50,7 +50,8 @@ Resources:
     Properties:
       GroupName: SecurityGroup
       GroupDescription: Security group for Nginx
-      VpcId: - Fn::ImportValue Outputs.VPC
+      VpcId: 
+        - Fn::ImportValue Outputs.VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
