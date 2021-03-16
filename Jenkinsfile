@@ -5,6 +5,20 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
     stages {
+        stage('upload templates to S3') {
+            steps {
+                withAWS(region:'us-east-1') {
+                    s3Upload(file:'VPC.yml', 
+                            bucket:'cf-templates-rf7qoumwv4es-us-east-1')
+                }
+                withAWS(region:'us-east-1') {
+                    s3Upload(file:'nginx-ecs.yml', 
+                            bucket:'cf-templates-rf7qoumwv4es-us-east-1')
+                }
+
+         }
+      }        
+ 
         stage('Submit VPC') {
             steps {
             sh "aws cloudformation create-stack --stack-name VPCStack --template-body file://VPC.yml --region 'us-east-1' --capabilities CAPABILITY_NAMED_IAM"
