@@ -15,7 +15,7 @@ Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://templateofvpc.s3.amazonaws.com/vpc.yml
+      TemplateURL: https://templateofvpc.s3.amazonaws.com/VPC.yml
       
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
