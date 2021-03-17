@@ -57,9 +57,5 @@ Resources:
 Outputs:
   PublicSubnet1:
     Value: !Ref PublicSubnet1
-    Export:
-      Name: !Sub ${AWS::StackName}-Public-Subnet-1
   VPC:
     Value: !Ref VPC
-    Export:
-      Name: !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
