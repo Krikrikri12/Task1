@@ -9,11 +9,11 @@ pipeline {
             steps {
                 withAWS(region:'us-east-1') {
                     s3Upload(file:'VPC.yml', 
-                            bucket:'cf-templates-rf7qoumwv4es-us-east-1')
+                            bucket:'templateofvpc')
                 }
                 withAWS(region:'us-east-1') {
                     s3Upload(file:'nginx-ecs.yml', 
-                            bucket:'cf-templates-rf7qoumwv4es-us-east-1')
+                            bucket:'templateofvpc')
                 }
 
          }
